@@ -189,6 +189,10 @@ export class Stake extends Entity<IStakeState> {
           staker
           proposal {
             id
+            scheme {
+              id
+              name
+            }
           }
           outcome
           amount

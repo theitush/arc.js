@@ -174,7 +174,7 @@ describe('Claim rewards', () => {
 
     const proposal = new GenericSchemeProposal(arc, tx.result.id)
 
-    const proposalState = await proposal.fetchState()
+    const proposalState = await proposal.fetchState({}, true)
 
     await arc.GENToken().approveForStaking(proposalState.votingMachine, stakeAmount).send()
     await proposal.stake(IProposalOutcome.Pass, stakeAmount).send()

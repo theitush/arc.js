@@ -42,7 +42,7 @@ describe('Create a ContributionReward proposal', () => {
     const proposal = await createCRProposal(arc, options)
     expect(proposal.id).toBeDefined()
 
-    const proposalState = await proposal.fetchState()
+    const proposalState = await proposal.fetchState({}, true)
 
     expect(fromWei(proposalState.externalTokenReward)).toEqual('0.0')
     expect(fromWei(proposalState.ethReward)).toEqual('300.0')
@@ -89,7 +89,7 @@ describe('Create a ContributionReward proposal', () => {
 
     const proposal = await createCRProposal(arc, options)
     const proposal2 = new ContributionRewardProposal(arc, proposal.id)
-    const proposalState = await proposal2.fetchState()
+    const proposalState = await proposal2.fetchState({}, true)
     expect(proposalState.descriptionHash).toEqual('QmRg47CGnf8KgqTZheTejowoxt4SvfZFqi7KGzr2g163uL')
 
     // get the data
