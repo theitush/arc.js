@@ -1,5 +1,5 @@
 import { first } from 'rxjs/operators'
-import { Arc, DAO, IProposalOutcome, IProposalStage, IProposalState, IProposalCreateOptionsCR, LATEST_ARC_VERSION, GenericScheme, GenericSchemeProposal, IGenericSchemeProposalState } from '../src'
+import { Arc, DAO, IProposalOutcome, IProposalStage, IProposalState, IProposalCreateOptionsCR, LATEST_ARC_VERSION, GenericScheme, GenericSchemeProposal } from '../src'
 
 import BN from 'bn.js'
 import { createAProposal, firstResult, getTestAddresses, getTestDAO, ITestAddresses, newArc,
@@ -173,21 +173,8 @@ describe('Claim rewards', () => {
     if(!tx.result) throw new Error('Response yielded no result')
 
     const proposal = new GenericSchemeProposal(arc, tx.result.id)
-    const proposalStates: IGenericSchemeProposalState[] = []
 
-    proposal.state({}).subscribe(
-      (next) => {
-        if (next) {
-          proposalStates.push(next)
-        }
-      },
-      (error: Error) => { throw error }
-    )
-
-    // wait until the propsal is indexed
-    await waitUntilTrue(() => proposalStates.length > 0)
-
-    const proposalState = proposalStates[0]
+    const proposalState = await proposal.fetchState()
 
     await arc.GENToken().approveForStaking(proposalState.votingMachine, stakeAmount).send()
     await proposal.stake(IProposalOutcome.Pass, stakeAmount).send()

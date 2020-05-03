@@ -1,7 +1,6 @@
-import { first } from 'rxjs/operators'
 import { Arc, IProposalCreateOptionsCR, ContributionRewardProposal } from '../src'
 import { DAO } from '../src'
-import { IProposalStage, Proposal } from '../src'
+import { IProposalStage } from '../src'
 
 import {
   fromWei,
@@ -10,7 +9,6 @@ import {
   getTestScheme,
   newArc,
   toWei,
-  waitUntilTrue,
   createCRProposal
 } from './utils'
 
@@ -42,15 +40,6 @@ describe('Create a ContributionReward proposal', () => {
     }
 
     const proposal = await createCRProposal(arc, options)
-    let proposals: ContributionRewardProposal[] = []
-    const proposalIsIndexed = async () => {
-      // we pass no-cache to make sure we hit the server on each request
-      proposals = await Proposal.search(arc, { where: {id: proposal.id}}, { fetchPolicy: 'no-cache' })
-        .pipe(first()).toPromise() as ContributionRewardProposal[]
-      return proposals.length > 0
-    }
-    await waitUntilTrue(proposalIsIndexed)
-
     expect(proposal.id).toBeDefined()
 
     const proposalState = await proposal.fetchState()
@@ -99,15 +88,7 @@ describe('Create a ContributionReward proposal', () => {
     }
 
     const proposal = await createCRProposal(arc, options)
-    let proposals: ContributionRewardProposal[] = []
-    const proposalIsIndexed = async () => {
-      // we pass no-cache to make sure we hit the server on each request
-      proposals = await Proposal.search(arc, {where: {id: proposal.id}}, { fetchPolicy: 'no-cache' })
-        .pipe(first()).toPromise() as ContributionRewardProposal[]
-      return proposals.length > 0
-    }
-    await waitUntilTrue(proposalIsIndexed)
-    const proposal2 = await new ContributionRewardProposal(arc, proposal.id)
+    const proposal2 = new ContributionRewardProposal(arc, proposal.id)
     const proposalState = await proposal2.fetchState()
     expect(proposalState.descriptionHash).toEqual('QmRg47CGnf8KgqTZheTejowoxt4SvfZFqi7KGzr2g163uL')
 

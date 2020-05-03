@@ -30,9 +30,22 @@ export abstract class Entity<TEntityState extends IEntityState> {
 
   public async fetchState(
     apolloQueryOptions: IApolloQueryOptions = {},
-    refetch?: boolean
+    refetch = true,
+    waitForIndexation = true
   ): Promise<TEntityState> {
     if (!this.coreState || refetch) {
+
+      if(waitForIndexation) {
+        return new Promise((resolve, reject) => {
+          this.state(apolloQueryOptions).subscribe(newState => {
+            if(newState) {
+              this.setState(newState)
+              resolve(newState)
+            }
+          })
+        })
+      }
+
       const state = await this.state(apolloQueryOptions).pipe(first()).toPromise()
 
       if (!state) {

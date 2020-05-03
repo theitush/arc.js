@@ -2,7 +2,6 @@ import { utils } from 'ethers'
 import { DocumentNode } from 'graphql'
 import gql from 'graphql-tag'
 import { Observable } from 'rxjs'
-import { first } from 'rxjs/operators'
 import {
   Address,
   AnyPlugin,
@@ -189,18 +188,5 @@ export abstract class Plugin<TPluginState extends IPluginState> extends Entity<T
       this.constructor.itemMap,
       apolloQueryOptions
     ) as Observable<TPluginState>
-  }
-
-  public async fetchState(
-    apolloQueryOptions: IApolloQueryOptions = {},
-    refetch?: boolean
-  ): Promise<TPluginState> {
-    if (this.coreState === undefined || refetch) {
-      const state = await this.state(apolloQueryOptions).pipe(first()).toPromise()
-      this.setState(state)
-      return state
-    }
-
-    return this.coreState
   }
 }

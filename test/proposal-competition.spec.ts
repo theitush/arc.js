@@ -125,14 +125,6 @@ describe('Competition Proposal', () => {
     if(!tx.result) throw new Error("Create proposal yielded no results")
 
     const proposal = new CompetitionProposal(arc, tx.result.id)
-
-    const proposalStates = []
-    proposal.state({}).subscribe(pstate => { 
-      if(pstate) proposalStates.push(pstate)
-    })
-
-    await waitUntilTrue(() => proposalStates.length > 0)
-
     await proposal.fetchState()
 
     // accept the proposal by voting for et

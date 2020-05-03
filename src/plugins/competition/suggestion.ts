@@ -237,12 +237,6 @@ export class CompetitionSuggestion extends Entity<ICompetitionSuggestionState> {
     )
   }
 
-  public async fetchState(): Promise<ICompetitionSuggestionState> {
-    const state = await this.state({ fetchPolicy: 'cache-first' }).pipe(first()).toPromise()
-    this.setState(state)
-    return state
-  }
-
   public async getPosition() {
     console.warn(
       `This method is deprecated - please use the positionInWinnerList from the proposal state`
