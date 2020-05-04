@@ -723,7 +723,7 @@ describe('Competition Proposal', () => {
     await waitUntilTrue(() => suggestionIds.indexOf(suggestion.id) > -1)
     subscription.unsubscribe()
 
-    let suggestionState = await suggestion.fetchState()
+    let suggestionState = await suggestion.fetchState({ fetchPolicy: 'cache-first' }, false, true)
 
     expect(suggestionState.proposal.id).toEqual(suggestionOptions.proposal)
     expect(suggestionState.beneficiary).toEqual(suggestionOptions.beneficiary)
