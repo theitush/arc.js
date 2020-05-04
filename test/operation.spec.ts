@@ -25,7 +25,11 @@ describe('Operation', () => {
     // collect the first 4 results of the observable in a a listOfUpdates array
     const listOfUpdates: Array<ITransactionUpdate<Proposal<IContributionRewardProposalState>>> = []
     plugin.createProposal(options).subscribe(
-      (next: ITransactionUpdate<Proposal<IContributionRewardProposalState>>) => listOfUpdates.push(next)
+      (next: ITransactionUpdate<Proposal<IContributionRewardProposalState>>) => {
+        console.log(next)
+        if(next)
+        listOfUpdates.push(next)
+      }
     )
 
     // wait for the transaction to be mined
